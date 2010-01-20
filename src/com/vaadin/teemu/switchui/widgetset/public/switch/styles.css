@@ -1,0 +1,21 @@
+.v-switch {
+	width: 81px;
+	height: 20px;
+	overflow: hidden;
+	border: 1px solid #888;	
+	position: relative;
+	cursor: pointer !important;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+}
+.v-switch-slider {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: url(images/my-switch.png) no-repeat;
+	width: 130px;
+	height: 20px;
+}
+.v-switch-focus {
+	border-color: #4f83b4 #5b97d0 #5ca0df;
+}
