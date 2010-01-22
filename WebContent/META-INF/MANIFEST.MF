@@ -4,7 +4,7 @@ Implementation-Vendor: Teemu Pöntelin / IT Mill Ltd
 Implementation-Title: SwitchComponent
 Implementation-Version: 0.9
 Vaadin-Package-Version: 1
+Class-Path: 
 Vaadin-Widgetsets: com.vaadin.teemu.switchui.widgetset.SwitchComponent
  Widgetset
-Class-Path: 
 
