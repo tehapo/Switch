@@ -1,4 +1,4 @@
-package com.vaadin.teemu.switchui;
+package org.vaadin.teemu.switchui;
 
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
@@ -12,7 +12,7 @@ import com.vaadin.ui.CheckBox;
  * @see com.vaadin.ui.CheckBox
  * @author Teemu Pöntelin | IT Mill Ltd. | http://vaadin.com/teemu
  */
-@com.vaadin.ui.ClientWidget(com.vaadin.teemu.switchui.widgetset.client.ui.VSwitch.class)
+@com.vaadin.ui.ClientWidget(org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch.class)
 @SuppressWarnings("serial")
 public class Switch extends CheckBox {
 

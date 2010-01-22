@@ -1,4 +1,4 @@
-package com.vaadin.teemu.switchui.widgetset.client.ui;
+package org.vaadin.teemu.switchui.widgetset.client.ui;
 
 public class DragInformation {
 

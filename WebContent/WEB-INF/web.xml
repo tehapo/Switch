@@ -15,13 +15,13 @@
   		<description>
   		Vaadin application class to start</description>
   		<param-name>application</param-name>
-  		<param-value>com.vaadin.teemu.switchui.SwitchComponentDemo</param-value>
+  		<param-value>org.vaadin.teemu.switchui.SwitchComponentDemo</param-value>
   	</init-param>
   	<init-param>
   		<description>
   		Application widgetset</description>
   		<param-name>widgetset</param-name>
-  		<param-value>com.vaadin.teemu.switchui.widgetset.SwitchComponentWidgetset</param-value>
+  		<param-value>org.vaadin.teemu.switchui.widgetset.SwitchComponentWidgetset</param-value>
   	</init-param>
   </servlet>
   <servlet-mapping>

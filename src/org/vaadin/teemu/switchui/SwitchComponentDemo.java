@@ -1,4 +1,4 @@
-package com.vaadin.teemu.switchui;
+package org.vaadin.teemu.switchui;
 
 import java.util.ArrayList;
 import java.util.List;
