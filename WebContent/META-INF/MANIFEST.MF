@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Vaadin-License-Title: Apache2
 Implementation-Vendor: Teemu Pöntelin / IT Mill Ltd
 Implementation-Title: Switch
-Implementation-Version: 0.9
+Implementation-Version: 0.91
 Vaadin-Package-Version: 1
-Class-Path: 
-Vaadin-Widgetsets: com.vaadin.teemu.switchui.widgetset.SwitchComponent
+Vaadin-Widgetsets: org.vaadin.teemu.switchui.widgetset.SwitchComponent
  Widgetset
+Class-Path: 
 
