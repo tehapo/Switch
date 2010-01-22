@@ -62,7 +62,6 @@ public class SwitchComponentDemo extends Application implements
         setMainWindow(mainWindow);
     }
 
-    @Override
     public void valueChange(ValueChangeEvent event) {
         mainWindow.showNotification("valueChange, "
                 + event.getProperty().getClass().getSimpleName() + ", "

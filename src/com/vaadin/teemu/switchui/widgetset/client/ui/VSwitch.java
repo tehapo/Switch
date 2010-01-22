@@ -218,7 +218,6 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         }
     }
 
-    @Override
     public void onKeyUp(KeyUpEvent event) {
         if (event.getNativeKeyCode() == 32) {
             // 32 = space bar
@@ -226,7 +225,6 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         }
     }
 
-    @Override
     public void onMouseDown(MouseDownEvent event) {
         mouseDown = true;
         dragInfo.setDragStartX(event.getClientX());
@@ -234,7 +232,6 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         event.preventDefault();
     }
 
-    @Override
     public void onMouseUp(MouseUpEvent event) {
         if (!dragInfo.isDragging()) {
             setValue(!value);
@@ -252,7 +249,6 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         dragInfo.setDragging(false); // not dragging anymore
     }
 
-    @Override
     public void onMouseMove(MouseMoveEvent event) {
         if (mouseDown) {
             if (Math.abs(dragInfo.getDragDistanceX(event.getClientX())) > DRAG_THRESHOLD_PIXELS) {
@@ -281,22 +277,18 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         }
     }
 
-    @Override
     public void onFocus(FocusEvent event) {
         addStyleDependentName("focus");
     }
 
-    @Override
     public void onBlur(BlurEvent event) {
         removeStyleDependentName("focus");
     }
 
-    @Override
     public boolean isAnimationEnabled() {
         return animated;
     }
 
-    @Override
     public void setAnimationEnabled(boolean enable) {
         animated = enable;
     }
