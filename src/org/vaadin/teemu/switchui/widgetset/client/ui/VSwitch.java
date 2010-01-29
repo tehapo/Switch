@@ -51,7 +51,7 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
 
     private Element slider;
     private boolean value;
-    private Element errorIndicatorElement;
+    private com.google.gwt.user.client.Element errorIndicatorElement;
     private Icon icon;
     private boolean immediate;
 
@@ -130,7 +130,6 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         paintableId = uidl.getId();
 
         // All the following is mostly just copied from VCheckBox
-        /*-
         if (uidl.hasAttribute("error")) {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createSpan();
@@ -143,7 +142,7 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
             }
         } else if (errorIndicatorElement != null) {
             DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
-        }*/
+        }
 
         if (uidl.hasAttribute("readonly")) {
             setEnabled(false);
