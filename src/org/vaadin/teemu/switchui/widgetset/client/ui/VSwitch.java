@@ -3,6 +3,9 @@ package org.vaadin.teemu.switchui.widgetset.client.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.vaadin.teemu.switchui.widgetset.client.ui.touch.Touch;
+import org.vaadin.teemu.switchui.widgetset.client.ui.touch.TouchEvent;
+
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -90,6 +93,7 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         handlers.add(addMouseUpHandler(this));
         handlers.add(addFocusHandler(this));
         handlers.add(addBlurHandler(this));
+        addTouchEventListeners(getElement());
     }
 
     private void removeHandlers() {
@@ -97,6 +101,7 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
             handler.removeHandler();
         }
         handlers = null;
+        removeTouchEventListeners(getElement());
     }
 
     /**
@@ -225,13 +230,36 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
     }
 
     public void onMouseDown(MouseDownEvent event) {
-        mouseDown = true;
-        dragInfo.setDragStartX(event.getClientX());
-        dragInfo.setDragStartOffsetLeft(slider.getOffsetLeft());
+        handleMouseDown(event.getScreenX());
         event.preventDefault();
     }
 
+    public void onTouchStart(TouchEvent event) {
+        Touch touch = event.getTouches().get(0);
+        handleMouseDown(touch.getPageX());
+        event.preventDefault();
+    }
+
+    private void handleMouseDown(int clientX) {
+        mouseDown = true;
+        dragInfo.setDragStartX(clientX);
+        dragInfo.setDragStartOffsetLeft(slider.getOffsetLeft());
+    }
+
     public void onMouseUp(MouseUpEvent event) {
+        handleMouseUp();
+    }
+
+    public void onTouchEnd(TouchEvent event) {
+        handleMouseUp();
+    }
+
+    public void onTouchCancel(TouchEvent event) {
+        // handle just like "normal" touchend event
+        onTouchEnd(event);
+    }
+
+    private void handleMouseUp() {
         if (!dragInfo.isDragging()) {
             setValue(!value);
         } else {
@@ -249,8 +277,18 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
     }
 
     public void onMouseMove(MouseMoveEvent event) {
+        handleMouseMove(event.getScreenX());
+    }
+
+    public void onTouchMove(TouchEvent event) {
+        Touch touch = event.getTouches().get(0);
+        handleMouseMove(touch.getPageX());
+        event.preventDefault();
+    }
+
+    private void handleMouseMove(int clientX) {
         if (mouseDown) {
-            if (Math.abs(dragInfo.getDragDistanceX(event.getClientX())) > DRAG_THRESHOLD_PIXELS) {
+            if (Math.abs(dragInfo.getDragDistanceX(clientX)) > DRAG_THRESHOLD_PIXELS) {
                 dragInfo.setDragging(true);
                 // Use capture to catch mouse events even if user
                 // drags the mouse cursor out of the widget area.
@@ -258,8 +296,7 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
             }
 
             if (dragInfo.isDragging()) {
-                int dragDistance = dragInfo
-                        .getDragDistanceX(event.getClientX());
+                int dragDistance = dragInfo.getDragDistanceX(clientX);
 
                 // calculate new left position and
                 // check for boundaries
@@ -292,4 +329,28 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         animated = enable;
     }
 
+    private native void addTouchEventListeners(Element element)
+    /*-{
+        var self = this;
+        element.ontouchstart = function(event) {
+            self.@org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch::onTouchStart(Lorg/vaadin/teemu/switchui/widgetset/client/ui/touch/TouchEvent;)(event);
+        }
+        element.ontouchmove = function(event) {
+            self.@org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch::onTouchMove(Lorg/vaadin/teemu/switchui/widgetset/client/ui/touch/TouchEvent;)(event);
+        }
+        element.ontouchend = function(event) {
+            self.@org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch::onTouchEnd(Lorg/vaadin/teemu/switchui/widgetset/client/ui/touch/TouchEvent;)(event);
+        }
+        element.ontouchcancel = function(event) {
+            self.@org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch::onTouchCancel(Lorg/vaadin/teemu/switchui/widgetset/client/ui/touch/TouchEvent;)(event);
+        }
+    }-*/;
+
+    private native void removeTouchEventListeners(Element element)
+    /*-{
+        element.ontouchstart = null;
+        element.ontouchmove = null;
+        element.ontouchend = null;
+        element.ontouchcancel = null;
+    }-*/;
 }
