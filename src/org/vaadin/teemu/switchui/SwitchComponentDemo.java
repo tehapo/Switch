@@ -38,13 +38,13 @@ public class SwitchComponentDemo extends Application implements
         centerLayout.setMargin(true);
 
         mainPanel = new Panel();
-        mainPanel.setCaption("Switch Component Demo");
         mainPanel.setWidth("750px");
         centerLayout.addComponent(mainPanel);
         centerLayout.setComponentAlignment(mainPanel, Alignment.TOP_CENTER);
         mainWindow.setContent(centerLayout);
 
         StringBuilder descriptionXhtml = new StringBuilder();
+        descriptionXhtml.append("<h1>Switch Component Demo</h1>");
         descriptionXhtml
                 .append("<p>Switch is a decorated checkbox inspired by the iPhone.</p>");
         descriptionXhtml
@@ -56,7 +56,7 @@ public class SwitchComponentDemo extends Application implements
         descriptionXhtml
                 .append("<li>Focusing the Switch with <i>tab</i> key and pressing <i>space</i></li>");
         descriptionXhtml
-                .append("<li>Dragging the Switch with your finger (Mobile Safari)</li>");
+                .append("<li>Dragging or tapping the Switch with your finger (Mobile Safari)</li>");
         descriptionXhtml.append("</ul>");
 
         Label description = new Label(descriptionXhtml.toString(),
@@ -65,12 +65,13 @@ public class SwitchComponentDemo extends Application implements
     }
 
     private void initDemoPanel() {
-        Panel demoPanel = new Panel("Demo");
+        Panel demoPanel = new Panel("Demonstration");
         mainPanel.addComponent(demoPanel);
 
         checkBox = new CheckBox("Animated?", true);
         checkBox.addListener(this);
         checkBox.setImmediate(true);
+        checkBox.setHeight("35px"); // add some spacing
         demoPanel.addComponent(checkBox);
 
         HorizontalLayout switchesLayout = new HorizontalLayout();
