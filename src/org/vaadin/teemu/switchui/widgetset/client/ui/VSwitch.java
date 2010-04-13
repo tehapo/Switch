@@ -167,8 +167,6 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
             icon = null;
         }
 
-        // Set text
-        // setText(uidl.getStringAttribute("caption"));
         setValue(uidl.getBooleanVariable("state"));
         immediate = uidl.getBooleanAttribute("immediate");
 

@@ -9,7 +9,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.validator.AbstractValidator;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
@@ -66,53 +66,47 @@ public class SwitchComponentDemo extends Application implements
 
     private void initDemoPanel() {
         Panel demoPanel = new Panel("Demo");
-        GridLayout demoLayout = new GridLayout(5, 2);
-        demoLayout.setSpacing(true);
-        demoLayout.setMargin(true);
-        demoPanel.setContent(demoLayout);
         mainPanel.addComponent(demoPanel);
 
         checkBox = new CheckBox("Animated?", true);
         checkBox.addListener(this);
         checkBox.setImmediate(true);
-        demoLayout.addComponent(checkBox, 0, 0, 4, 0);
+        demoPanel.addComponent(checkBox);
 
-        Switch plainSwitch = new Switch("Switch 1");
-        plainSwitch.setImmediate(true);
-        plainSwitch.addListener(this);
-        allSwitches.add(plainSwitch);
-        demoLayout.addComponent(plainSwitch);
+        HorizontalLayout switchesLayout = new HorizontalLayout();
+        switchesLayout.setSpacing(true);
+        demoPanel.addComponent(switchesLayout);
 
-        Switch plainSwitch2 = new Switch("Switch 2");
-        plainSwitch2.setValue(true);
-        plainSwitch2.setImmediate(true);
-        plainSwitch2.addListener(this);
-        allSwitches.add(plainSwitch2);
-        demoLayout.addComponent(plainSwitch2);
+        Switch plainSwitch = createSwitch("Switch 1", true);
+        switchesLayout.addComponent(plainSwitch);
 
-        Switch disabledSwitch = new Switch("Disabled");
+        Switch plainSwitch2 = createSwitch("Switch 2", false);
+        switchesLayout.addComponent(plainSwitch2);
+
+        Switch disabledSwitch = createSwitch("Disabled", true);
         disabledSwitch.setEnabled(false);
-        disabledSwitch.addListener(this);
-        allSwitches.add(disabledSwitch);
-        demoLayout.addComponent(disabledSwitch);
+        switchesLayout.addComponent(disabledSwitch);
 
-        Switch readOnlySwitch = new Switch("Read-only", true);
+        Switch readOnlySwitch = createSwitch("Read-only", false);
         readOnlySwitch.setReadOnly(true);
-        readOnlySwitch.addListener(this);
-        allSwitches.add(readOnlySwitch);
-        demoLayout.addComponent(readOnlySwitch);
+        switchesLayout.addComponent(readOnlySwitch);
 
-        Switch validatorSwitch = new Switch("Validator", true);
+        Switch validatorSwitch = createSwitch("Validator", true);
         validatorSwitch
                 .addValidator(new AbstractValidator("Only ON is valid!") {
                     public boolean isValid(Object value) {
                         return (Boolean) value;
                     }
                 });
-        validatorSwitch.setImmediate(true);
-        validatorSwitch.addListener(this);
-        allSwitches.add(validatorSwitch);
-        demoLayout.addComponent(validatorSwitch);
+        switchesLayout.addComponent(validatorSwitch);
+    }
+
+    private Switch createSwitch(String caption, boolean initialState) {
+        Switch switchComponent = new Switch(caption, initialState);
+        switchComponent.addListener(this);
+        switchComponent.setImmediate(true);
+        allSwitches.add(switchComponent);
+        return switchComponent;
     }
 
     public void valueChange(ValueChangeEvent event) {
