@@ -2,11 +2,11 @@
 	width: 81px;
 	height: 20px;
 	overflow: hidden;
-	border: 1px solid #888;	
+	border: 1px solid #bfbfbf;	
 	position: relative;
 	cursor: pointer !important;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 .v-switch-slider {
 	position: absolute;
@@ -16,6 +16,8 @@
 	width: 130px;
 	height: 20px;
 }
-.v-switch-focus {
+.v-switch-focus,
+.v-switch:focus {
+	outline: none;
 	border-color: #4f83b4 #5b97d0 #5ca0df;
 }

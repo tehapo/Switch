@@ -2,15 +2,16 @@ package org.vaadin.teemu.switchui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.validator.AbstractValidator;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -18,99 +19,111 @@ import com.vaadin.ui.Window;
 public class SwitchComponentDemo extends Application implements
         Property.ValueChangeListener {
 
-    private final int NUMBER_OF_SLAVES = 10;
     private Window mainWindow;
     private CheckBox checkBox;
     private List<Switch> allSwitches = new ArrayList<Switch>(3);
-    private List<Switch> slaves = new ArrayList<Switch>(NUMBER_OF_SLAVES);
-    private Switch masterSwitch;
+    private Panel mainPanel;
 
     @Override
     public void init() {
-        initSlaves();
+        initWindowAndDescription();
+        initDemoPanel();
+    }
 
-        VerticalLayout mainLayout = new VerticalLayout();
-        mainLayout.setSpacing(true);
-        mainLayout.setMargin(true);
+    private void initWindowAndDescription() {
+        mainWindow = new Window("Switch Component Demo");
+        setMainWindow(mainWindow);
 
-        mainWindow = new Window("SwitchComponentDemo");
-        mainWindow.setContent(mainLayout);
-        Label label = new Label(
-                "This is a demo application of the Switch component.");
-        mainWindow.addComponent(label);
+        VerticalLayout centerLayout = new VerticalLayout();
+        centerLayout.setMargin(true);
+
+        mainPanel = new Panel();
+        mainPanel.setCaption("Switch Component Demo");
+        mainPanel.setWidth("750px");
+        centerLayout.addComponent(mainPanel);
+        centerLayout.setComponentAlignment(mainPanel, Alignment.TOP_CENTER);
+        mainWindow.setContent(centerLayout);
+
+        StringBuilder descriptionXhtml = new StringBuilder();
+        descriptionXhtml
+                .append("<p>Switch is a decorated checkbox inspired by the iPhone.</p>");
+        descriptionXhtml
+                .append("<p>Download and rate this component at <a href=\"http://vaadin.com/directory#addon/9\">Vaadin Directory</a>.</p>");
+        descriptionXhtml.append("<p>The value can be changed by:</p>");
+        descriptionXhtml.append("<ul>");
+        descriptionXhtml.append("<li>Clicking the Switch</li>");
+        descriptionXhtml.append("<li>Dragging the Switch with mouse</li>");
+        descriptionXhtml
+                .append("<li>Focusing the Switch with <i>tab</i> key and pressing <i>space</i></li>");
+        descriptionXhtml
+                .append("<li>Dragging the Switch with your finger (Mobile Safari)</li>");
+        descriptionXhtml.append("</ul>");
+
+        Label description = new Label(descriptionXhtml.toString(),
+                Label.CONTENT_XHTML);
+        mainPanel.addComponent(description);
+    }
+
+    private void initDemoPanel() {
+        Panel demoPanel = new Panel("Demo");
+        GridLayout demoLayout = new GridLayout(5, 2);
+        demoLayout.setSpacing(true);
+        demoLayout.setMargin(true);
+        demoPanel.setContent(demoLayout);
+        mainPanel.addComponent(demoPanel);
 
         checkBox = new CheckBox("Animated?", true);
         checkBox.addListener(this);
         checkBox.setImmediate(true);
-        mainWindow.addComponent(checkBox);
+        demoLayout.addComponent(checkBox, 0, 0, 4, 0);
 
-        masterSwitch = new Switch("Master Switch", false);
-        masterSwitch.setImmediate(true);
-        masterSwitch.addListener(this);
-        allSwitches.add(masterSwitch);
-        mainWindow.addComponent(masterSwitch);
+        Switch plainSwitch = new Switch("Switch 1");
+        plainSwitch.setImmediate(true);
+        plainSwitch.addListener(this);
+        allSwitches.add(plainSwitch);
+        demoLayout.addComponent(plainSwitch);
 
-        HorizontalLayout slavesLayout = new HorizontalLayout();
-        for (Switch slave : slaves) {
-            slavesLayout.addComponent(slave);
-        }
-        slavesLayout.setSpacing(true);
-        mainWindow.addComponent(slavesLayout);
+        Switch plainSwitch2 = new Switch("Switch 2");
+        plainSwitch2.setValue(true);
+        plainSwitch2.setImmediate(true);
+        plainSwitch2.addListener(this);
+        allSwitches.add(plainSwitch2);
+        demoLayout.addComponent(plainSwitch2);
 
-        HorizontalLayout statusLayout = new HorizontalLayout();
-        statusLayout.setSpacing(true);
-        Switch switchComponent3 = new Switch("Disabled Switch");
-        switchComponent3.setEnabled(false);
-        allSwitches.add(switchComponent3);
-        statusLayout.addComponent(switchComponent3);
+        Switch disabledSwitch = new Switch("Disabled");
+        disabledSwitch.setEnabled(false);
+        disabledSwitch.addListener(this);
+        allSwitches.add(disabledSwitch);
+        demoLayout.addComponent(disabledSwitch);
 
-        Switch switchComponent4 = new Switch("Read-only Switch", true);
-        switchComponent4.setReadOnly(true);
-        allSwitches.add(switchComponent4);
-        statusLayout.addComponent(switchComponent4);
+        Switch readOnlySwitch = new Switch("Read-only", true);
+        readOnlySwitch.setReadOnly(true);
+        readOnlySwitch.addListener(this);
+        allSwitches.add(readOnlySwitch);
+        demoLayout.addComponent(readOnlySwitch);
 
-        Switch switchComponent5 = new Switch("Switch with Validator", true);
-        switchComponent5
+        Switch validatorSwitch = new Switch("Validator", true);
+        validatorSwitch
                 .addValidator(new AbstractValidator("Only ON is valid!") {
-                    @Override
                     public boolean isValid(Object value) {
                         return (Boolean) value;
                     }
                 });
-        switchComponent5.setImmediate(true);
-        allSwitches.add(switchComponent5);
-        statusLayout.addComponent(switchComponent5);
-
-        mainWindow.addComponent(statusLayout);
-
-        setMainWindow(mainWindow);
-    }
-
-    private void initSlaves() {
-        Random r = new Random();
-        for (int i = 0; i < NUMBER_OF_SLAVES; i++) {
-            Switch slave = new Switch("Slave Switch " + (i + 1));
-            slave.setValue(r.nextBoolean());
-            slaves.add(slave);
-            allSwitches.add(slave);
-        }
+        validatorSwitch.setImmediate(true);
+        validatorSwitch.addListener(this);
+        allSwitches.add(validatorSwitch);
+        demoLayout.addComponent(validatorSwitch);
     }
 
     public void valueChange(ValueChangeEvent event) {
-        mainWindow.showNotification("valueChange, "
-                + event.getProperty().getClass().getSimpleName() + ", "
-                + event.getProperty().getValue());
-
-        if (event.getProperty() == masterSwitch) {
-            for (Switch slave : slaves) {
-                slave.setValue(masterSwitch.getValue());
-            }
-        }
-
         if (event.getProperty() == checkBox) {
             for (Switch s : allSwitches) {
                 s.setAnimationEnabled(checkBox.booleanValue());
             }
+        } else if (event.getProperty() instanceof Switch) {
+            mainWindow.showNotification(((Switch) event.getProperty())
+                    .getCaption()
+                    + ": " + event.getProperty().getValue());
         }
     }
 
