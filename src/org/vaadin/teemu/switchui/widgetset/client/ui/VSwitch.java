@@ -97,10 +97,12 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
     }
 
     private void removeHandlers() {
-        for (HandlerRegistration handler : handlers) {
-            handler.removeHandler();
+        if (handlers != null) {
+            for (HandlerRegistration handler : handlers) {
+                handler.removeHandler();
+            }
+            handlers = null;
         }
-        handlers = null;
         removeTouchEventListeners(getElement());
     }
 

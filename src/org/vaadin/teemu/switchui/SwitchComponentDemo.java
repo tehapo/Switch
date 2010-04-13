@@ -9,7 +9,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.validator.AbstractValidator;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
@@ -66,31 +66,30 @@ public class SwitchComponentDemo extends Application implements
 
     private void initDemoPanel() {
         Panel demoPanel = new Panel("Demonstration");
+        GridLayout demoLayout = new GridLayout(5, 2);
+        demoLayout.setSpacing(true);
+        demoLayout.setMargin(true);
+        demoPanel.setContent(demoLayout);
         mainPanel.addComponent(demoPanel);
 
         checkBox = new CheckBox("Animated?", true);
         checkBox.addListener(this);
         checkBox.setImmediate(true);
-        checkBox.setHeight("35px"); // add some spacing
-        demoPanel.addComponent(checkBox);
-
-        HorizontalLayout switchesLayout = new HorizontalLayout();
-        switchesLayout.setSpacing(true);
-        demoPanel.addComponent(switchesLayout);
+        demoLayout.addComponent(checkBox, 0, 0, 4, 0);
 
         Switch plainSwitch = createSwitch("Switch 1", true);
-        switchesLayout.addComponent(plainSwitch);
+        demoLayout.addComponent(plainSwitch);
 
         Switch plainSwitch2 = createSwitch("Switch 2", false);
-        switchesLayout.addComponent(plainSwitch2);
+        demoLayout.addComponent(plainSwitch2);
 
         Switch disabledSwitch = createSwitch("Disabled", true);
         disabledSwitch.setEnabled(false);
-        switchesLayout.addComponent(disabledSwitch);
+        demoLayout.addComponent(disabledSwitch);
 
         Switch readOnlySwitch = createSwitch("Read-only", false);
         readOnlySwitch.setReadOnly(true);
-        switchesLayout.addComponent(readOnlySwitch);
+        demoLayout.addComponent(readOnlySwitch);
 
         Switch validatorSwitch = createSwitch("Validator", true);
         validatorSwitch
@@ -99,7 +98,7 @@ public class SwitchComponentDemo extends Application implements
                         return (Boolean) value;
                     }
                 });
-        switchesLayout.addComponent(validatorSwitch);
+        demoLayout.addComponent(validatorSwitch);
     }
 
     private Switch createSwitch(String caption, boolean initialState) {
