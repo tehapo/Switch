@@ -35,7 +35,7 @@ import com.vaadin.terminal.gwt.client.ui.Icon;
 /**
  * VSwitch is the client-side implementation of the Switch component.
  * 
- * @author Teemu Pöntelin | IT Mill Ltd. | http://vaadin.com/teemu
+ * @author Teemu Pöntelin | Vaadin Ltd. | http://vaadin.com/teemu
  */
 public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         MouseDownHandler, MouseUpHandler, MouseMoveHandler, FocusHandler,
@@ -63,6 +63,7 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
     private final DragInformation dragInfo = new DragInformation();
 
     private boolean animated;
+    private int tabIndex;
     private List<HandlerRegistration> handlers;
 
     /**
@@ -183,8 +184,25 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         }
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
+        if (!enabled) {
+            super.setTabIndex(-1);
+        } else {
+            super.setTabIndex(tabIndex);
+        }
+    }
+
+    @Override
+    public void setTabIndex(int index) {
+        super.setTabIndex(index);
+        tabIndex = index;
+    }
+
     private void setValue(boolean value) {
-        if (this.value == value || !isEnabled()) {
+        if (this.value == value) {
             return;
         }
 

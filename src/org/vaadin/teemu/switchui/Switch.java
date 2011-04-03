@@ -10,7 +10,7 @@ import com.vaadin.ui.CheckBox;
  * functionality and added support for enabling and disabling animation.
  * 
  * @see com.vaadin.ui.CheckBox
- * @author Teemu Pöntelin | IT Mill Ltd. | http://vaadin.com/teemu
+ * @author Teemu Pöntelin | Vaadin Ltd. | http://vaadin.com/teemu
  */
 @com.vaadin.ui.ClientWidget(org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch.class)
 @SuppressWarnings("serial")

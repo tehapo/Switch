@@ -56,7 +56,7 @@ public class SwitchComponentDemo extends Application implements
         descriptionXhtml
                 .append("<li>Focusing the Switch with <i>tab</i> key and pressing <i>space</i></li>");
         descriptionXhtml
-                .append("<li>Dragging or tapping the Switch with your finger (Mobile Safari)</li>");
+                .append("<li>Dragging or tapping the Switch with your finger (Mobile Safari, Android)</li>");
         descriptionXhtml.append("</ul>");
 
         Label description = new Label(descriptionXhtml.toString(),
@@ -66,7 +66,7 @@ public class SwitchComponentDemo extends Application implements
 
     private void initDemoPanel() {
         Panel demoPanel = new Panel("Demonstration");
-        GridLayout demoLayout = new GridLayout(5, 2);
+        GridLayout demoLayout = new GridLayout(6, 2);
         demoLayout.setSpacing(true);
         demoLayout.setMargin(true);
         demoPanel.setContent(demoLayout);
@@ -75,7 +75,7 @@ public class SwitchComponentDemo extends Application implements
         checkBox = new CheckBox("Animated?", true);
         checkBox.addListener(this);
         checkBox.setImmediate(true);
-        demoLayout.addComponent(checkBox, 0, 0, 4, 0);
+        demoLayout.addComponent(checkBox, 0, 0, 5, 0);
 
         Switch plainSwitch = createSwitch("Switch 1", true);
         demoLayout.addComponent(plainSwitch);
@@ -87,9 +87,13 @@ public class SwitchComponentDemo extends Application implements
         disabledSwitch.setEnabled(false);
         demoLayout.addComponent(disabledSwitch);
 
-        Switch readOnlySwitch = createSwitch("Read-only", false);
+        Switch readOnlySwitch = createSwitch("Read-only (on)", true);
         readOnlySwitch.setReadOnly(true);
         demoLayout.addComponent(readOnlySwitch);
+
+        Switch readOnlySwitch2 = createSwitch("Read-only (off)", false);
+        readOnlySwitch2.setReadOnly(true);
+        demoLayout.addComponent(readOnlySwitch2);
 
         Switch validatorSwitch = createSwitch("Validator", true);
         validatorSwitch
@@ -116,8 +120,7 @@ public class SwitchComponentDemo extends Application implements
             }
         } else if (event.getProperty() instanceof Switch) {
             mainWindow.showNotification(((Switch) event.getProperty())
-                    .getCaption()
-                    + ": " + event.getProperty().getValue());
+                    .getCaption() + ": " + event.getProperty().getValue());
         }
     }
 
