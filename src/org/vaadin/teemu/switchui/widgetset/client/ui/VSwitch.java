@@ -3,12 +3,11 @@ package org.vaadin.teemu.switchui.widgetset.client.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.vaadin.teemu.switchui.widgetset.client.ui.touch.Touch;
-import org.vaadin.teemu.switchui.widgetset.client.ui.touch.TouchEvent;
-
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -21,12 +20,21 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.TouchCancelEvent;
+import com.google.gwt.event.dom.client.TouchCancelHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasAnimation;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -39,7 +47,8 @@ import com.vaadin.terminal.gwt.client.ui.Icon;
  */
 public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         MouseDownHandler, MouseUpHandler, MouseMoveHandler, FocusHandler,
-        BlurHandler, HasAnimation {
+        BlurHandler, HasAnimation, TouchStartHandler, TouchEndHandler,
+        TouchMoveHandler, TouchCancelHandler {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-switch";
@@ -94,7 +103,11 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         handlers.add(addMouseUpHandler(this));
         handlers.add(addFocusHandler(this));
         handlers.add(addBlurHandler(this));
-        addTouchEventListeners(getElement());
+
+        handlers.add(addTouchStartHandler(this));
+        handlers.add(addTouchEndHandler(this));
+        handlers.add(addTouchCancelHandler(this));
+        handlers.add(addTouchMoveHandler(this));
     }
 
     private void removeHandlers() {
@@ -104,7 +117,6 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
             }
             handlers = null;
         }
-        removeTouchEventListeners(getElement());
     }
 
     /**
@@ -170,7 +182,7 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
             icon = null;
         }
 
-        setValue(uidl.getBooleanVariable("state"));
+        setValue(uidl.getBooleanVariable("state"), null);
         immediate = uidl.getBooleanAttribute("immediate");
 
         setAnimationEnabled(uidl.getBooleanAttribute("animated"));
@@ -201,20 +213,30 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         tabIndex = index;
     }
 
-    private void setValue(boolean value) {
+    private void setValue(boolean value, NativeEvent event) {
         if (this.value == value) {
             return;
         }
 
-        // update the server state
-        if (paintableId == null || client == null) {
-            return;
-        }
         this.value = value;
-        client.updateVariable(paintableId, "state", this.value, immediate);
 
         // update the UI
         updateVisibleState();
+
+        if (event != null) {
+            // Update the server state if the value change was initiated from an
+            // UI event (event != null).
+            if (paintableId == null || client == null) {
+                return;
+            }
+
+            MouseEventDetails details = new MouseEventDetails(event,
+                    getElement());
+            client.updateVariable(paintableId, "mousedetails",
+                    details.serialize(), false);
+
+            client.updateVariable(paintableId, "state", this.value, immediate);
+        }
     }
 
     private void updateVisibleState() {
@@ -243,18 +265,12 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
     public void onKeyUp(KeyUpEvent event) {
         if (event.getNativeKeyCode() == 32) {
             // 32 = space bar
-            setValue(!value);
+            setValue(!value, event.getNativeEvent());
         }
     }
 
     public void onMouseDown(MouseDownEvent event) {
         handleMouseDown(event.getScreenX());
-        event.preventDefault();
-    }
-
-    public void onTouchStart(TouchEvent event) {
-        Touch touch = event.getTouches().get(0);
-        handleMouseDown(touch.getPageX());
         event.preventDefault();
     }
 
@@ -265,26 +281,17 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
     }
 
     public void onMouseUp(MouseUpEvent event) {
-        handleMouseUp();
+        handleMouseUp(event.getNativeEvent());
     }
 
-    public void onTouchEnd(TouchEvent event) {
-        handleMouseUp();
-    }
-
-    public void onTouchCancel(TouchEvent event) {
-        // handle just like "normal" touchend event
-        onTouchEnd(event);
-    }
-
-    private void handleMouseUp() {
+    private void handleMouseUp(NativeEvent event) {
         if (!dragInfo.isDragging()) {
-            setValue(!value);
+            setValue(!value, event);
         } else {
             if (slider.getOffsetLeft() < (-unvisiblePartWidth / 2)) {
-                setValue(false);
+                setValue(false, event);
             } else {
-                setValue(true);
+                setValue(true, event);
             }
             updateVisibleState();
             DOM.releaseCapture(getElement());
@@ -296,12 +303,6 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
 
     public void onMouseMove(MouseMoveEvent event) {
         handleMouseMove(event.getScreenX());
-    }
-
-    public void onTouchMove(TouchEvent event) {
-        Touch touch = event.getTouches().get(0);
-        handleMouseMove(touch.getPageX());
-        event.preventDefault();
     }
 
     private void handleMouseMove(int clientX) {
@@ -347,28 +348,23 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
         animated = enable;
     }
 
-    private native void addTouchEventListeners(Element element)
-    /*-{
-        var self = this;
-        element.ontouchstart = function(event) {
-            self.@org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch::onTouchStart(Lorg/vaadin/teemu/switchui/widgetset/client/ui/touch/TouchEvent;)(event);
-        }
-        element.ontouchmove = function(event) {
-            self.@org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch::onTouchMove(Lorg/vaadin/teemu/switchui/widgetset/client/ui/touch/TouchEvent;)(event);
-        }
-        element.ontouchend = function(event) {
-            self.@org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch::onTouchEnd(Lorg/vaadin/teemu/switchui/widgetset/client/ui/touch/TouchEvent;)(event);
-        }
-        element.ontouchcancel = function(event) {
-            self.@org.vaadin.teemu.switchui.widgetset.client.ui.VSwitch::onTouchCancel(Lorg/vaadin/teemu/switchui/widgetset/client/ui/touch/TouchEvent;)(event);
-        }
-    }-*/;
+    public void onTouchCancel(TouchCancelEvent event) {
+        handleMouseUp(event.getNativeEvent());
+    }
 
-    private native void removeTouchEventListeners(Element element)
-    /*-{
-        element.ontouchstart = null;
-        element.ontouchmove = null;
-        element.ontouchend = null;
-        element.ontouchcancel = null;
-    }-*/;
+    public void onTouchMove(TouchMoveEvent event) {
+        Touch touch = event.getTouches().get(0).cast();
+        handleMouseMove(touch.getPageX());
+        event.preventDefault();
+    }
+
+    public void onTouchEnd(TouchEndEvent event) {
+        handleMouseUp(event.getNativeEvent());
+    }
+
+    public void onTouchStart(TouchStartEvent event) {
+        Touch touch = event.getTouches().get(0).cast();
+        handleMouseDown(touch.getPageX());
+        event.preventDefault();
+    }
 }
