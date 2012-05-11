@@ -194,6 +194,7 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
                 addHandlers();
             }
         }
+        updateStyleName();
     }
 
     @Override
