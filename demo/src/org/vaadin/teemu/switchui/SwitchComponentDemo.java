@@ -27,7 +27,8 @@ public class SwitchComponentDemo extends Application implements
     @Override
     public void init() {
         initWindowAndDescription();
-        initDemoPanel();
+        mainPanel.addComponent(createDemoPanel(null));
+        mainPanel.addComponent(createDemoPanel("compact"));
     }
 
     private void initWindowAndDescription() {
@@ -48,7 +49,7 @@ public class SwitchComponentDemo extends Application implements
         descriptionXhtml
                 .append("<p>Switch is a decorated checkbox inspired by the iPhone.</p>");
         descriptionXhtml
-                .append("<p>Download and rate this component at <a href=\"http://vaadin.com/directory#addon/9\">Vaadin Directory</a>.</p>");
+                .append("<p>Download and rate this component at <a href=\"http://vaadin.com/addon/switch\">Vaadin Directory</a>.</p>");
         descriptionXhtml.append("<p>The value can be changed by:</p>");
         descriptionXhtml.append("<ul>");
         descriptionXhtml.append("<li>Clicking the Switch</li>");
@@ -64,38 +65,41 @@ public class SwitchComponentDemo extends Application implements
         mainPanel.addComponent(description);
     }
 
-    private void initDemoPanel() {
-        Panel demoPanel = new Panel("Demonstration");
+    private Panel createDemoPanel(String switchStyle) {
+        Panel demoPanel = new Panel("Demonstration ("
+                + (switchStyle == null ? "default" : '"' + switchStyle + '"')
+                + " style)");
         GridLayout demoLayout = new GridLayout(6, 2);
         demoLayout.setSpacing(true);
         demoLayout.setMargin(true);
         demoPanel.setContent(demoLayout);
-        mainPanel.addComponent(demoPanel);
 
-        checkBox = new CheckBox("Animated?", true);
-        checkBox.addListener(this);
-        checkBox.setImmediate(true);
-        demoLayout.addComponent(checkBox, 0, 0, 5, 0);
+        if (checkBox == null) {
+            checkBox = new CheckBox("Animated?", true);
+            checkBox.addListener(this);
+            checkBox.setImmediate(true);
+            demoLayout.addComponent(checkBox, 0, 0, 5, 0);
+        }
 
-        Switch plainSwitch = createSwitch("Switch 1", true);
+        Switch plainSwitch = createSwitch("Switch 1", switchStyle, true);
         demoLayout.addComponent(plainSwitch);
 
-        Switch plainSwitch2 = createSwitch("Switch 2", false);
+        Switch plainSwitch2 = createSwitch("Switch 2", switchStyle, false);
         demoLayout.addComponent(plainSwitch2);
 
-        Switch disabledSwitch = createSwitch("Disabled", true);
+        Switch disabledSwitch = createSwitch("Disabled", switchStyle, true);
         disabledSwitch.setEnabled(false);
         demoLayout.addComponent(disabledSwitch);
 
-        Switch readOnlySwitch = createSwitch("Read-only (on)", true);
+        Switch readOnlySwitch = createSwitch("Read-only", switchStyle, true);
         readOnlySwitch.setReadOnly(true);
         demoLayout.addComponent(readOnlySwitch);
 
-        Switch readOnlySwitch2 = createSwitch("Read-only (off)", false);
+        Switch readOnlySwitch2 = createSwitch("Read-only", switchStyle, false);
         readOnlySwitch2.setReadOnly(true);
         demoLayout.addComponent(readOnlySwitch2);
 
-        Switch validatorSwitch = createSwitch("Validator", true);
+        Switch validatorSwitch = createSwitch("Validator", switchStyle, true);
         validatorSwitch
                 .addValidator(new AbstractValidator("Only ON is valid!") {
                     public boolean isValid(Object value) {
@@ -103,12 +107,17 @@ public class SwitchComponentDemo extends Application implements
                     }
                 });
         demoLayout.addComponent(validatorSwitch);
+        return demoPanel;
     }
 
-    private Switch createSwitch(String caption, boolean initialState) {
+    private Switch createSwitch(String caption, String style,
+            boolean initialState) {
         Switch switchComponent = new Switch(caption, initialState);
         switchComponent.addListener(this);
         switchComponent.setImmediate(true);
+        if (style != null) {
+            switchComponent.setStyleName(style);
+        }
         allSwitches.add(switchComponent);
         return switchComponent;
     }
