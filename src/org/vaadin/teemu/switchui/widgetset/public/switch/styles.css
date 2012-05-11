@@ -38,3 +38,37 @@
 	background: url(images/compact-switch.png) no-repeat;
 	width: 96px;	
 }
+
+
+
+/** Overriding styles for "holodeck" style. */
+.v-switch-holodeck {
+	border: none;
+	width: 82px;
+	-moz-border-radius; 0;
+	-webkit-border-radius; 0;
+	border-radius: 0;
+}
+.v-switch-holodeck .v-switch-slider {
+	background: #474747 url(images/holodeck-switch.png) no-repeat;
+	width: 122px;
+}
+.v-switch-holodeck.on .v-switch-slider {
+	background-color: #0c7fb1;
+}
+.v-switch-holodeck.on .v-switch-slider:after,
+.v-switch-holodeck .v-switch-slider:after {
+	color: #bdbdbd;
+	font-family: Helvetica;
+	font-size: 10px;
+	position: absolute;
+	top: 0;
+	left: 50px;
+	line-height: 20px;
+}
+.v-switch-holodeck .v-switch-slider:after {
+	content: "OFF";
+}
+.v-switch-holodeck.on .v-switch-slider:after {
+	content: "ON";
+}

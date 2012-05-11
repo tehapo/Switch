@@ -29,6 +29,7 @@ public class SwitchComponentDemo extends Application implements
         initWindowAndDescription();
         mainPanel.addComponent(createDemoPanel(null));
         mainPanel.addComponent(createDemoPanel("compact"));
+        mainPanel.addComponent(createDemoPanel("holodeck"));
     }
 
     private void initWindowAndDescription() {

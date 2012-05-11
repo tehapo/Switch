@@ -248,6 +248,7 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
 
         if (!isAnimationEnabled() || skipAnimation) {
             slider.getStyle().setProperty("left", targetLeft + "px");
+            updateStyleName();
         } else {
             Animation a = new Animation() {
 
@@ -257,8 +258,24 @@ public class VSwitch extends FocusWidget implements Paintable, KeyUpHandler,
                     int newLeft = (int) (currentLeft + (progress * (targetLeft - currentLeft)));
                     slider.getStyle().setProperty("left", newLeft + "px");
                 }
+
+                @Override
+                protected void onComplete() {
+                    super.onComplete();
+                    updateStyleName();
+                }
             };
             a.run(ANIMATION_DURATION_MS);
+        }
+    }
+
+    private void updateStyleName() {
+        if (value) {
+            addStyleName("on");
+            removeStyleName("off");
+        } else {
+            addStyleName("off");
+            removeStyleName("on");
         }
     }
 
