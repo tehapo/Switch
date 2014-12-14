@@ -2,8 +2,6 @@ package org.vaadin.teemu.switchui.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Scheduler;
@@ -72,8 +70,6 @@ public class SwitchWidget extends FocusWidget implements HasValue<Boolean>,
     private List<HandlerRegistration> handlers;
 
     public SwitchWidget() {
-        Logger.getLogger("Switch").log(Level.SEVERE,
-                "creating new switchwidget");
         setElement(Document.get().createDivElement());
         setStyleName(CLASSNAME);
 
