@@ -3,4 +3,5 @@
 .project
 .settings
 build
-WebContent/VAADIN/widgetsets
+**/target
+**/widgetsets
