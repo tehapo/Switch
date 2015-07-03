@@ -43,6 +43,9 @@ public class SwitchConnector extends AbstractFieldConnector implements
                     getState().checked = getWidget().getValue();
                     getRpcProxy(CheckBoxServerRpc.class).setChecked(
                             getState().checked, null);
+                    if (getState().immediate) {
+                        getConnection().sendPendingVariableChanges();
+                    }
                 }
             }
         });
