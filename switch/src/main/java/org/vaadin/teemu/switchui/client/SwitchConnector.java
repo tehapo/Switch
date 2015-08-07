@@ -115,10 +115,6 @@ public class SwitchConnector extends AbstractFieldConnector implements
             icon.sinkEvents(Event.ONCLICK);
         }
 
-        if (stateChangeEvent.isInitialStateChange()) {
-            // Set the initial value without animation.
-            getWidget().setAnimationEnabled(false);
-        }
         getWidget().setValue(getState().checked);
         getWidget().setAnimationEnabled(getState().animated);
 

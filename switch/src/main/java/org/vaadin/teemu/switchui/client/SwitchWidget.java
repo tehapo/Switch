@@ -65,6 +65,7 @@ public class SwitchWidget extends FocusWidget implements HasValue<Boolean>,
     private int unvisiblePartWidth = -1;
     private final DragInformation dragInfo = new DragInformation();
 
+    private boolean initialValueSet;
     private boolean animated;
     private int tabIndex;
     private List<HandlerRegistration> handlers;
@@ -86,7 +87,9 @@ public class SwitchWidget extends FocusWidget implements HasValue<Boolean>,
         if (unvisiblePartWidth < 0) {
             int width = this.getElement().getClientWidth();
             int sliderWidth = this.slider.getClientWidth();
-            unvisiblePartWidth = sliderWidth - width;
+            if (sliderWidth - width > 0) {
+                unvisiblePartWidth = sliderWidth - width;
+            }
         }
         return unvisiblePartWidth;
     }
@@ -169,21 +172,19 @@ public class SwitchWidget extends FocusWidget implements HasValue<Boolean>,
             if (fireEvents) {
                 ValueChangeEvent.fire(this, value);
             }
+        } else {
+            initialValueSet = true;
         }
     }
 
     private void updateVisibleState() {
-        updateVisibleState(false);
-    }
-
-    private void updateVisibleState(final boolean skipAnimation) {
         ScheduledCommand command = new ScheduledCommand() {
 
             @Override
             public void execute() {
                 final int targetLeft = (value ? 0 : -getUnvisiblePartWidth());
 
-                if (!isAnimationEnabled() || skipAnimation) {
+                if (!isAnimationEnabled() || !initialValueSet) {
                     slider.getStyle().setProperty("left", targetLeft + "px");
                     updateStyleName();
                 } else {
@@ -205,6 +206,7 @@ public class SwitchWidget extends FocusWidget implements HasValue<Boolean>,
                     };
                     a.run(ANIMATION_DURATION_MS);
                 }
+                initialValueSet = true;
             }
         };
 
