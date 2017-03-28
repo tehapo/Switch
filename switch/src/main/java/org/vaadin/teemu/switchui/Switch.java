@@ -2,7 +2,6 @@ package org.vaadin.teemu.switchui;
 
 import org.vaadin.teemu.switchui.client.SwitchState;
 
-import com.vaadin.data.Property;
 import com.vaadin.ui.CheckBox;
 
 /**
@@ -25,10 +24,6 @@ public class Switch extends CheckBox {
 
     public Switch(String caption, boolean initialState) {
         super(caption, initialState);
-    }
-
-    public Switch(String caption, Property<Boolean> dataSource) {
-        super(caption, dataSource);
     }
 
     @Override
