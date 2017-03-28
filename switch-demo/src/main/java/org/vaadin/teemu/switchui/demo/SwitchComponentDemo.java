@@ -100,14 +100,13 @@ public class SwitchComponentDemo extends UI implements
         Switch readOnlySwitch2 = createSwitch("Read-only", switchStyle, false);
         readOnlySwitch2.setReadOnly(true);
         demoLayout.addComponent(readOnlySwitch2);
-        
 
         Switch validatorSwitch = createSwitch("Validator", switchStyle, true);
         
         Binder<Object> b = new Binder<>(Object.class);
         b.forField(validatorSwitch)
-                .withValidator(value->value, "Only ON is valid!")
-                .bind(object -> Boolean.FALSE, ( object, fieldvalue) -> {});
+                .withValidator(value -> value, "Only ON is valid!")
+                .bind(object -> Boolean.FALSE, (object, fieldvalue) -> {});
         demoLayout.addComponent(validatorSwitch);
         return demoPanel;
     }
