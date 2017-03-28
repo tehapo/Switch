@@ -5,13 +5,17 @@ import java.util.List;
 
 import org.vaadin.teemu.switchui.Switch;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.data.ValidationResult;
+import com.vaadin.data.ValueContext;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.validator.AbstractValidator;
+import com.vaadin.server.Setter;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.GridLayout;
@@ -23,9 +27,8 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 @Widgetset("org.vaadin.teemu.switchui.demo.SwitchDemoWidgetset")
-@Theme("reindeer")
 public class SwitchComponentDemo extends UI implements
-        Property.ValueChangeListener {
+        ValueChangeListener {
 
     private CheckBox checkBox;
     private List<Switch> allSwitches = new ArrayList<Switch>(3);
@@ -82,7 +85,6 @@ public class SwitchComponentDemo extends UI implements
         if (checkBox == null) {
             checkBox = new CheckBox("Animated?", true);
             checkBox.addValueChangeListener(this);
-            checkBox.setImmediate(true);
             demoLayout.addComponent(checkBox, 0, 0, 5, 0);
         }
 
@@ -103,20 +105,14 @@ public class SwitchComponentDemo extends UI implements
         Switch readOnlySwitch2 = createSwitch("Read-only", switchStyle, false);
         readOnlySwitch2.setReadOnly(true);
         demoLayout.addComponent(readOnlySwitch2);
+        
 
         Switch validatorSwitch = createSwitch("Validator", switchStyle, true);
-        validatorSwitch.addValidator(new AbstractValidator<Boolean>(
-                "Only ON is valid!") {
-            @Override
-            protected boolean isValidValue(Boolean value) {
-                return value;
-            }
-
-            @Override
-            public Class<Boolean> getType() {
-                return Boolean.class;
-            }
-        });
+        
+        Binder<Object> b = new Binder<>(Object.class);
+        b.forField(validatorSwitch)
+                .withValidator(value->value, "Only ON is valid!")
+                .bind(object -> Boolean.FALSE, ( object, fieldvalue) -> {});
         demoLayout.addComponent(validatorSwitch);
         return demoPanel;
     }
@@ -125,7 +121,6 @@ public class SwitchComponentDemo extends UI implements
             boolean initialState) {
         Switch switchComponent = new Switch(caption, initialState);
         switchComponent.addValueChangeListener(this);
-        switchComponent.setImmediate(true);
         if (style != null) {
             switchComponent.setStyleName(style);
         }
@@ -134,13 +129,13 @@ public class SwitchComponentDemo extends UI implements
     }
 
     public void valueChange(ValueChangeEvent event) {
-        if (event.getProperty() == checkBox) {
+        if (event.getSource() == checkBox) {
             for (Switch s : allSwitches) {
                 s.setAnimationEnabled(checkBox.getValue());
             }
-        } else if (event.getProperty() instanceof Switch) {
-            Notification.show(((Switch) event.getProperty()).getCaption()
-                    + ": " + event.getProperty().getValue());
+        } else if (event.getSource() instanceof Switch) {
+            Notification.show(event.getComponent().getCaption()
+                    + ": " + event.getValue());
         }
     }
 

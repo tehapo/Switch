@@ -5,12 +5,12 @@
 	<groupId>org.vaadin.teemu</groupId>
 	<artifactId>switch-demo</artifactId>
 	<packaging>war</packaging>
-	<version>2.0.3</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<name>Switch Add-on Demo</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin.version>7.2.0</vaadin.version>
+		<vaadin.version>8.0.4</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 	</properties>
 
@@ -94,10 +94,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.0</version>
+				<version>3.6.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
@@ -167,9 +167,9 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.10.v20130312</version>
+				<version>9.4.2.v20170220</version>
 				<configuration>
 					<webApp>
 						<contextPath>/</contextPath>
