@@ -117,6 +117,8 @@ public class SwitchConnector extends AbstractFieldConnector implements
 
         getWidget().setValue(getState().checked);
         getWidget().setAnimationEnabled(getState().animated);
+        boolean isDomStyle = getState().styles.contains(Switch.DOM_STYLE);
+        getWidget().setDomStyleEnabled(isDomStyle);
 
         getWidget().immediate = getState().immediate;
     }

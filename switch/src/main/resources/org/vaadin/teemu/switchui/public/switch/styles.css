@@ -72,3 +72,45 @@
 .v-switch-holodeck.on .v-switch-slider:after {
 	content: "ON";
 }
+
+.v-switch-dom {
+    height: 22px;
+    width: 58px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+.v-switch-dom .v-switch-slider {
+    height: 20px; 
+    width: 96px;
+    background: none;
+}
+.v-switch-dom .v-switch-on-plate {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: inherit;
+    width: 48px;
+    background-color: green;
+}
+.v-switch-dom .v-switch-off-plate {
+    position: absolute;
+    height: inherit;
+    top: 0px;
+    left: 49px;
+    width: 48px;
+    background-color: #7f7f7f;
+}
+.v-switch-dom .v-switch-knob {
+    position: absolute;
+    top: 0px;
+    right: 38px;
+    height: 18px; /* 20 - 2 * border */
+    width: 18px;  /* 20 - 2 * border */ 
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #e5e5e5;
+    border: 1px solid #4d4d4d;
+    
+}

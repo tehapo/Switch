@@ -48,6 +48,7 @@ public class SwitchComponentDemo extends UI implements
         content.addComponent(createDemoPanel(null));
         content.addComponent(createDemoPanel("compact"));
         content.addComponent(createDemoPanel("holodeck"));
+        content.addComponent(createDemoPanel(Switch.DOM_STYLE));
     }
 
     private Label createDescription() {
@@ -133,6 +134,7 @@ public class SwitchComponentDemo extends UI implements
         return switchComponent;
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         if (event.getProperty() == checkBox) {
             for (Switch s : allSwitches) {

@@ -8,12 +8,14 @@ import com.vaadin.ui.CheckBox;
 /**
  * Switch is basically a decorated CheckBox. Server-side API has all the same
  * functionality and added support for enabling and disabling animation.
- * 
+ *
  * @see com.vaadin.ui.CheckBox
  * @author Teemu Pöntelin | Vaadin Ltd. | https://vaadin.com/teemu
  */
 @SuppressWarnings("serial")
 public class Switch extends CheckBox {
+
+    public static final String DOM_STYLE = "dom";
 
     public Switch() {
         super();
